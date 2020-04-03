@@ -1,0 +1,51 @@
+.signInForm {
+    margin-top: 80px;
+    display: grid;
+    justify-content: center;
+}
+
+.signInForm .signInInput {
+    margin-bottom: 10px;
+    padding: 10px 3px;
+    width: 400px;
+    text-align: start;
+}
+
+@media(max-width:415px) {
+    .signInForm .signInInput {
+        width: 80vw;
+    }
+}
+
+.signInForm input:focus {
+    outline: none;
+}
+
+.signInConfirm {
+    border: none;
+    justify-self: center;
+    margin-top: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 130px;
+    background-color: #28A08B;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.toSignUp {
+    justify-self: center;
+    font-size: 0.90rem;
+}
+
+.signInFgtPwd {
+    justify-self: end;
+    font-size: .75rem;
+    margin-top: -10px;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}

@@ -1,0 +1,14 @@
+.headerNavBar {
+    display: flex;
+    height: 60px;
+    flex-direction: row;
+    background-color: #3157A0;
+    padding: 10px 2%;
+    justify-self: start;
+}
+
+@media(max-width:500px) {
+    .avatarLogin {
+        visibility: hidden;
+    }
+}

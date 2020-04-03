@@ -1,0 +1,16 @@
+.newFiliere,
+.filiereNiveauMax {
+    margin-right: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.filiereNiveauMax {
+    width: 70px;
+}
+
+.newFiliereSubmit {
+    padding: 5px;
+    border: none;
+}

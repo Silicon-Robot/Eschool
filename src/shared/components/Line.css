@@ -1,0 +1,44 @@
+.statLine,
+.tb {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(100px, 1fr));
+}
+
+.td h3:nth-child(even) {
+    background-color: rgba(39, 39, 190, 0.473);
+}
+
+.td h3:nth-child(odd) {
+    background-color: rgba(0, 0, 255, 0.473);
+}
+
+.td h3 {
+    word-wrap: break-word;
+    text-align: center;
+    margin: 5px 0;
+    padding: 2px;
+}
+
+.th h3 {
+    background-color: black;
+    color: white;
+    text-align: center;
+    margin: 5px 0 0 0;
+    padding: 2px;
+}
+
+.th h3:nth-child(even) {
+    background-color: grey;
+}
+
+.td:nth-child(even) h3 {
+    margin-top: 0;
+}
+
+.td:nth-child(odd) h3 {
+    margin-bottom: 10px;
+}
+
+.td {
+    background-color: rgba(70, 70, 97, 0.685);
+}

@@ -1,12 +1,8 @@
 const initState = {
-    cours: [{
-        _id:'TchanaWorld',
-        startDate:'01/04/2020',
-        codeDuCour:'INF220',
-        nomCour:'Algorithme et structure de donnees',
-        natureCour:[{ _id:'KomguemWorld', nomNature:'CM'}],
-        history: []
-    }]
+    cours:[
+        {idCour:1, classe:['IRT','IMB'], nomCours:'IDE', codeCours:'PROG0001', nomEnseignant:'Wangun Parfait Pascal'},
+        {idCour:2, nomCours:'Bases de Donnes', codeCours:'PROG0002', nomEnseignant:'Djeukam Arsene Georgy'},
+    ]
 }
 
 const courReducer = (state = initState, action)=>{

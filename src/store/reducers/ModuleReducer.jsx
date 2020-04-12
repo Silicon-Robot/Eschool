@@ -1,19 +1,16 @@
 const initState = {
-    modules: [{
-        _id:'TamenWorld',
-        codeModule:'EA139A',
-        nomModule:'Mathematique I',
-        idClasse:'NtchamiWorld',
-        credit: 8,
-        cours: [{
-            idCour:'TchanaWorld',
-            nomCour:'Algorithme et Structure de donnees',
-            codeDuCour:'INF220',
-            poids:0.6,
-            idPersonnel:'KouatchouaWorld'
-        }],
-        history: []
-    }]
+    modules:[
+        { 
+            index:1, codeModule:'UE0325',
+            nomModule:'Programmation',
+            nomClasse:'IRT 2',
+            creditModule:6,
+            matieres: [
+                {codeCours:'PROG0001', poids:0.6},
+                {codeCours:'PROG0002', poids:0.2},
+            ]
+        },
+    ]
 }
 
 const moduleReducer = (state = initState, action)=>{

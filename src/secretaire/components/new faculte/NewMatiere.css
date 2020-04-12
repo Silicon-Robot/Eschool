@@ -24,7 +24,7 @@
 .StyledFiliere {
     display: grid;
     /* grid-auto-flow: column; */
-    grid-template-columns: repeat(5, minmax(50px, 200px));
+    grid-template-columns: 20px repeat(1, minmax(250px, 1fr)) 100px 50px repeat(2, minmax(50px, 100px));
     margin-top: 10px;
     justify-content: start;
 }

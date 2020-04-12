@@ -1,15 +1,8 @@
 const initState = {
-    personnels: [{
-        _id:'KouatchouaWorld',
-        Matricule:'17C12NBW700',
-        nom:'Kouatchoua',
-        prenom:'Mark',
-        mail:'kouatch@gmail.com',
-        tel:'679879615',
-        role:'Enseignant',
-        startDate:'01/04/2020',
-        history: []
-    }]
+    personnels: [
+        {idPersonnel:1, Matricule:'kouatch', nom:'Kouatchoua', prenom:'Mark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+        {idPersonnel:2, Matricule:'tchakou', nom:'Kouatchoua Tchakoumi', prenom:'Lorrain', mail:'lorraintchakoumi@gmail.com', tel:'657140183', role:'secretaire'}
+]
 }
 
 const personnelReducer = (state = initState, action)=>{

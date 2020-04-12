@@ -1,0 +1,51 @@
+.LineHolder {
+    display: grid;
+    /* grid-auto-flow: column; */
+    grid-template-columns: repeat(8, minmax(50px, 1fr));
+}
+
+.columnTime {
+    display: grid;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    justify-content: center;
+}
+
+.columnDay {
+    display: grid;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    justify-content: center;
+}
+
+.columnDay:last-of-type {
+    border-right: 1px solid black;
+}
+
+#selectCours,
+#selectSalle {
+    border: none;
+}
+
+select:focus {
+    outline: none;
+}
+
+.columnTime {
+    border-left: 1px solid black;
+}
+
+h3 {
+    display: inline;
+}
+
+.th {
+    border-top: 1px solid black;
+}
+
+#fromTime,
+#toTime {
+    width: 40px;
+    border: none;
+    text-align: center;
+}

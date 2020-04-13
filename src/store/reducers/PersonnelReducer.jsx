@@ -1,8 +1,12 @@
 const initState = {
     personnels: [
-        {idPersonnel:1, Matricule:'kouatch', nom:'Kouatchoua', prenom:'Mark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
-        {idPersonnel:2, Matricule:'tchakou', nom:'Kouatchoua Tchakoumi', prenom:'Lorrain', mail:'lorraintchakoumi@gmail.com', tel:'657140183', role:'secretaire'}
-]
+        {idPersonnel:2, matricule:'tchakou', nom:'Kouatchoua Tchakoumi', prenom:'Lorrain', mail:'lorraintchakoumi@gmail.com', tel:'657140183', role:'secretaire'},
+        {idPersonnel:1, matricule:'kouatch', nom:'Kouatchoua', prenom:'Mark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+        {idPersonnel:1, matricule:'abatas', nom:'Abatas', prenom:'Mark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+        {idPersonnel:1, matricule:'ark', nom:'Kouatchoua', prenom:'Ark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+        {idPersonnel:1, matricule:'lark', nom:'Kouatchoua', prenom:'Lark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+        {idPersonnel:1, matricule:'babatas', nom:'Babatas', prenom:'Mark', mail:'kouatch@gmail.com', tel:'679879615', role:'enseignant'},
+    ]
 }
 
 const personnelReducer = (state = initState, action)=>{

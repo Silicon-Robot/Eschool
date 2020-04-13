@@ -1,9 +1,8 @@
 const initState = {
     roles: [
-        {
-            _id:'HelloWorld', nomRole:'Enseignant', startDate:'01/04/2020',
-            history:[]
-        }
+        {id:1, nomRole:'enseignant'},
+        {id:2, nomRole:'coordonateur'},
+        {id:3, nomRole:'secretaire'},
     ]
 }
 

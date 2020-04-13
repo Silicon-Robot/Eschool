@@ -1,7 +1,7 @@
 const initState = {
     coordonateurs:[{
         _id:'KamdaWorld',
-        idPersonnel:'KouatchouaWorld',
+        matriculePersonnel:'KouatchouaWorld',
         classes: ['NtchamiWorld'],
         horaire: {
             début_journée:'8:00:00',

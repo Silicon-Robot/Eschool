@@ -12,7 +12,8 @@ import ForgotPassword from './auth/signIn/pages/ForgotPwd';
 // import CoordoTimeTable from './coordonateur/pages/CoordoTimeTable';
 // import ClasseSettings from './secretaire/components/new module/ClasseSettings';
 // import Settings from './secretaire/pages/Settings';
-import ManagePersonnel from './secretaire/components/manage personnel/ManagePersonnel'
+// import ManagePersonnel from './secretaire/components/manage personnel/ManagePersonnel'
+import TeacherCourses from './secretaire/components/attribuerCoursEnseignant/TeacherCourses';
 // import TimeTableLine from './coordonateur/components/TimeTableLine';
 // import TimeTableFormat from './coordonateur/components/TimeTableFormat';
 
@@ -23,7 +24,7 @@ class App extends React.Component {
             <
             Switch >
             <
-            Route exact path = '/' > < ManagePersonnel / > < /Route> <
+            Route exact path = '/' > < TeacherCourses / > < /Route> <
             Route exact path = '/restpwd' > < ForgotPassword / > < /Route> <
             Route exact path = '/sendMail' > < SendMail / > < /Route> <
             Route exact path = '/signup' > < SignUp / > < /Route> <

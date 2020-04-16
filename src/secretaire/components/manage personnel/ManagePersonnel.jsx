@@ -260,7 +260,7 @@ class ManagePersonnel extends Component {
             <span className='displayPersonnelListHeaderElement'>ACTIONS</span>
         </div>
     )
-
+    
     render() {
         return (
             <div>

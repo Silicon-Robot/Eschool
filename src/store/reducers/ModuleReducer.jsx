@@ -1,22 +1,28 @@
 const initState = {
     modules:[
-        { 
-            index:1, codeModule:'UE0325',
-            nomModule:'Programmation',
-            nomClasse:'IRT 2',
-            creditModule:6,
-            matieres: [
-                {codeCours:'PROG0001', poids:0.6},
-                {codeCours:'PROG0002', poids:0.2},
-            ]
-        },
     ]
 }
 
+const adjustIndex = (listArray) => {
+        let index = 0;
+        let tempQuestions = []
+        listArray.map(filiere => {
+            index = index + 1
+            filiere.index = index
+            tempQuestions.push(filiere)
+            return null;
+        })
+
+        return tempQuestions;
+    }
+
 const moduleReducer = (state = initState, action)=>{
     switch(action.type){
+        case 'LOAD_MODULE':
+            let newList = adjustIndex(action.payload)
+            return{...state, modules:[...state.modules, ...newList]}
         case 'CREATE_MODULE':
-            return{...state, modules:[...state.modules, ...action.payload]}
+            return{...state, modules:[...state.modules, {index: state.modules.length+1, ...action.payload}]}
         default:
             return state
     }

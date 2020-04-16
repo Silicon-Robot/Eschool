@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import { connect } from "react-redux";
 
 import "./newfaculte.css"
 import NewMatiere from "./NewMatiere";
@@ -48,9 +49,22 @@ class NewFaculte extends Component
 	}
 	
 	handleDeleteFaculty=(facultyIndex)=>{
-		let newList = this.state.facultes.filter(faculte=>Number(facultyIndex) !== faculte.index)
-		newList = this.adjustIndex(newList)
-		this.setState({facultes:newList})
+		console.log(facultyIndex,this.props.facultes[facultyIndex-1])
+		fetch(`http://localhost:3001/faculty/${this.props.facultes[facultyIndex-1]._id}/delete`, {
+            method: 'delete',
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(response=>response.json())
+          .then(data=>{
+          	console.log(data.message)
+            if(data.message){
+							this.props.dispatch({type: "DELETE_FACULTY", payload: facultyIndex})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))			
 		//facultyIndex is the index of the faculty to be deleted.
 		//this function is meant for deleting that faculty from the database. so delete this faculty
 	}
@@ -90,14 +104,35 @@ class NewFaculte extends Component
 			document.getElementById('nomFaculte').value=""
 			//this is the data to be uploaded
 			// uploadData is the faculty to be created... verify that the data in it coincides with the data to be uploaded then upload. without which please try to complete it as it should be.
-			let uploadData={nomFaculte:this.state.nomFaculte, filieres:this.state.filieres, index:this.state.facultes.length+1}
+			let newFilieres = this.state.filieres.map(filiere=>{ return{nomFiliere: filiere.nomFiliere, maxNiveau: filiere.niveauMax, startDate: Date.now()}})
+			fetch('http://localhost:3001/faculty/new', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              nomFaculty: this.state.nomFaculte,
+              filieres: newFilieres,
+              startDate:Date.now(),
 
-			this.setState({
-				facultes:[...this.state.facultes, uploadData],
-				showTop:true,
-				filieres:[],
-				nomFaculte:''
-			}, ()=>console.log(this.state.facultes))
+            })
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.message){
+							let uploadData={nomFaculte:this.state.nomFaculte, filieres:this.state.filieres, index:this.props.facultes.length+1, _id: data.message}
+              this.setState({
+							showTop:true,
+							filieres:[],
+							nomFaculte:''
+							}, async ()=>{
+								await this.props.dispatch({type:"CREATE_FACULTY", payload: [uploadData]})
+								console.log(this.props.facultes)
+							})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))			
 		}else{alert('Empty faculty name or no filieres')}
 	}
 
@@ -136,13 +171,56 @@ class NewFaculte extends Component
 			this.setState({open:false})
 	    }
 	}
+
+	componentDidMount(){
+		fetch('http://localhost:3001/faculty/', {
+            method: 'get',
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(response=>response.json())
+          .then(async data=>{
+            if(data.message){
+	            let classes = await fetch('http://localhost:3001/classe/', {
+		            method: 'get',
+		            headers: {'Content-Type': 'application/json'}
+	         		 })
+		          .then(response=>response.json())
+		          
+		          if(!classes.message) throw Error("Couldn't retrieve classes");
+		          console.log(classes.message)
+		          classes.message = classes.message.map(classe=> {return {idClasse:classe._id, filiere:{nomFiliere:classe.nomClasse, idFiliere: classe.idFiliere}, niveau:classe.niveau}})
+		          await this.props.dispatch({type: "CREATE_CLASSE", payload: classes.message})
+
+            	let Facultx = data.message.map((faculty,j)=>{
+            		return{
+            	    nomFaculte: faculty.nomFaculty,
+            	    filieres: faculty.filieres.map((filiere,i)=>{
+            	    	return {
+	            	     nomFiliere: filiere.nomFiliere, 
+	            	     niveauMax: filiere.maxNiveau, 
+	            	     index: i+1,
+	            	     _id: filiere._id
+            	    	}
+            	    }), 
+            	    index: j+1,
+            	    _id: faculty._id
+            	  }
+            	})
+             this.props.dispatch({type: "CREATE_FACULTY", payload: Facultx})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error.message))		
+	}
 	render()
 	{
 		return(
 			<section className = "container">
 				<span className='blockTitle'>ADMINISTRATION DES FACULTES</span>
 				<div>
-					{this.state.facultes.length!==0?<ComponentDeroulement facultes={this.state.facultes} handleDeleteFaculty={this.handleDeleteFaculty} />:null}
+					{this.props.facultes.length!==0?<ComponentDeroulement facultes={this.props.facultes} handleDeleteFaculty={this.handleDeleteFaculty} />:null}
 					<div className = "header" onClick = {this.displayAndHiddenContent}>
 						<span className = "icon"><i className ="fa fa-plus-circle fa-2x"></i></span>
 						<span className = "title"> Nouvelle faculte </span>
@@ -183,4 +261,10 @@ class NewFaculte extends Component
 }
 
 
-export default NewFaculte
+const mapStateToProps = (state) => {
+    return {
+        facultes: state.Faculty.faculties,
+    }
+};
+
+export default  connect(mapStateToProps)(NewFaculte)

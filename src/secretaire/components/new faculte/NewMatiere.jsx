@@ -71,7 +71,7 @@ export default class NewMatiere extends Component {
         return (
             <div>
                 {this.styleFiliere()}
-                <div className='newFilierep' onClick={this.toggleFaIcon} ><i className='fa fa-plus-circle' id='fa-icon'/>Nouvelle Matiere</div>
+                <div className='newFilierep' onClick={this.toggleFaIcon} ><i className='fa fa-plus-circle' id='fa-icon'/>Nouvelle Filiere</div>
                 {
                     this.state.open?(
                     <form onSubmit={this.handleSubmit}>

@@ -30,20 +30,20 @@ class ClasseSettings extends Component {
 
     FacultyOptions=()=>{
         return this.props.facultes.map(faculte=>(
-            <optgroup key={faculte.nomFaculty} label={faculte.nomFaculty}>
+            <optgroup key={faculte.nomFaculte} label={faculte.nomFaculte}>
                 {faculte.filieres.map(filiere=>(
-                    <option key={filiere.nomFiliere}>{filiere.nomFiliere}</option>
+                    <option key={filiere.nomFiliere} value={filiere._id}>{filiere.nomFiliere}</option>
                 ))}
             </optgroup>
         ))
     }
 
     showFiliereClass=()=>{
-        let requiredClasses = this.props.classes.filter(classe=>classe.filiere.nomFiliere===this.state.filiere
+        let requiredClasses = this.props.classes.filter(classe=>classe.filiere.idFiliere === this.state.filiere
         )
-
+        console.log(this.state.filiere)
         return requiredClasses.map(classe=>
-        <option key={classe.filiere.nomFiliere+' '+classe.niveau}>
+        <option key={classe.filiere.nomFiliere+' '+classe.niveau} value={classe.idClasse}>
             {classe.filiere.nomFiliere+' '+classe.niveau}
         </option>
         )
@@ -128,7 +128,7 @@ class ClasseSettings extends Component {
     }
 
     getFiliereModules=()=>{
-        let theModules=this.props.modules.filter(module=>module.nomClasse===this.state.classe)
+        let theModules=this.props.modules.filter(module=>module.idClasse===this.state.classe)
         return theModules.map(module=>{
             return <div className="ModuleData" key={module.codeModule}>
                 <div className="moduleDataHeader" onClick={()=>this.handleOpenModule(module.codeModule)} >
@@ -156,7 +156,7 @@ class ClasseSettings extends Component {
                 <span className=''>{subject.subject.nomCours}</span>
                 <span className=''>{subject.subject.codeCours}</span>
                 <span className=''>{subject.poidsMatiere}</span>
-                <span className=''>{subject.subject.nomEnseignant}</span>
+                <span className=''>{(function(person){var personnel=person.find(personnel=>(personnel.idPersonnel === subject.subject.nomEnseignant)); return personnel.nom+" "+personnel.prenom})(this.props.personnels)}</span>
             </div>
         ))
     }
@@ -184,7 +184,7 @@ class ClasseSettings extends Component {
 
     teacherOptions=()=>{
         let teacherList=this.TeachersOnly()
-        return teacherList.map(teacher=><option key={teacher.Matricule}>{teacher.nom+' '+teacher.prenom}</option>)
+        return teacherList.map(teacher=><option key={teacher.matricule} value={teacher.idPersonnel}>{teacher.nom+' '+teacher.prenom}</option>)
     }
 
     addedNewMatieres =()=>{
@@ -287,12 +287,19 @@ class ClasseSettings extends Component {
             console.log(totalPoids)
             if(totalPoids>=1){
                 //add ID to the newModule object before upload or what do you think we should just use the codeCours as the id?? answer me on whatsapp when you see this comment
-                let newModule = {nomModule:this.state.nomNewModule, codeModule:this.state.codeNewModule, classe:this.state.classe, creditModule:this.state.creditNewModule, matieres:newSubjects}
+                let newModule = {
+                    nomModule:this.state.nomNewModule, 
+                    codeModule  :this.state.codeNewModule, 
+                    idClasse:this.state.classe, 
+                    credit:this.state.creditNewModule, 
+                    cours:newSubjects,
+                    startDate: Date.now()
+                }
 
                 //prepare cours Array of objects
                 let newMatieres= []
                 this.state.newMatieres.map(matiere=>{
-                    delete matiere.poidsMatiere
+                    // delete matiere.poidsMatiere
                     newMatieres.push(matiere)
                     return null
                 })
@@ -308,7 +315,14 @@ class ClasseSettings extends Component {
                 let created=[]
                 newMatieres.filter(newSubject=>{
                     if(this.props.cours.find(cour=>cour.codeCours===newSubject.codeMatiere) === undefined){
-                        let object={nomCours:newSubject.nomMatiere, codeCours:newSubject.codeMatiere, nomEnseignant:newSubject.nomEnseignant, classe:[newSubject.classe]}
+                        let object={
+                            nomCour:newSubject.nomMatiere, 
+                            codeCour:newSubject.codeMatiere, 
+                            idEnseignant:newSubject.nomEnseignant, 
+                            poids: newSubject.poidsMatiere, 
+                            classes:[newSubject.classe], 
+                            startDate: Date.now()
+                        }
                         created.push(object)
                         return null
                     }else{
@@ -317,7 +331,72 @@ class ClasseSettings extends Component {
                         return null
                     }
                 })
-                /*
+                if(update.length>0){
+                    fetch('http://localhost:3001/classe/module/cour/update', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                      cours: update
+                    })
+                  })
+                  .then(response=>response.json())
+                  .then(data=>{
+                    if(data.message){
+                        const cours = data.message.map(cour=>{return{
+                            idCour:cour._id,
+                            classe: cour.classes,
+                            nomCours: cour.nomCour,
+                            codeCours: cour.codeCour,
+                            nomEnseignant: cour.idEnseignant,
+                        }})
+                        this.props.dispatch({type: "UPDATE_COUR", payload: cours})
+                    }
+                    else{
+                      console.log(data)
+                    }
+                  })
+                  .catch(error=>console.log(error))   
+                  }      
+                if(created.length>0){
+                    fetch('http://localhost:3001/classe/module/new', {
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                          newModule,
+                          coursArray: created
+                        })
+                      })
+                      .then(response=>response.json())
+                      .then(data=>{
+                        if(data.message){
+                            console.log(data.message)
+                            let module = data.message[0].module;
+                            module = [module];
+
+                            const modules = module.map(module=>{return{
+                                idClasse: module.idClasse,
+                                idModule:module._id,
+                                nomModule: module.nomModule,
+                                codeModule: module.codeModule,
+                                matieres: module.cours.map(cour=>{return{codeCours: cour.codeCours, poids: cour.poids}}),
+                            }})
+                            this.props.dispatch({type: "CREATE_MODULE", payload: {...modules[0]}})
+                            const cours = data.message.slice(1).map(cour=>{return{
+                                idCour:cour._id,
+                                classe: cour.classes,
+                                nomCours: cour.nomCour,
+                                codeCours: cour.codeCour,
+                                nomEnseignant: cour.idEnseignant,
+                            }})
+                            this.props.dispatch({type: "CREATE_COUR", payload: cours})
+                        }
+                        else{
+                          console.log(data)
+                        }
+                      })
+                      .catch(error=>console.log(error))   
+                  }      
+                        /*
                     you can handle your backend here... do all neccessary creates, updates,
 
                     the data needed for this interface to work are:
@@ -334,7 +413,7 @@ class ClasseSettings extends Component {
                     for the courses to update their classes, the array is: update
                     for the courses to create, the array is: created
                 */
-                this.resetModule()
+                // this.resetModule()
             }else alert('Total weightings of the subjects is less than 1.\nTotal weightings of subjects for a module should be equal to 1.\nAdjust the weightings and try again')
         }else alert('Invalid module name or module code or module weight or no subjects for the module. verify this and try again')
     }
@@ -358,6 +437,48 @@ class ClasseSettings extends Component {
                 }
             </div>
         )
+    }
+
+    componentDidMount(){
+        fetch('http://localhost:3001/classe/module/users-courses-modules', {
+            method: 'get',
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.message){
+                const users = data.message.users.map(user=>{return{
+                    idPersonnel:user._id,
+                    matricule: user.matricule,
+                    nom: user.nom,
+                    prenom: user.prenom,
+                    mail: user.email,
+                    tel: user.tel,
+                    role: user.role.nomRole
+                }})
+                const cours = data.message.courses.map(cour=>{return{
+                    idCour:cour._id,
+                    classe: cour.classes,
+                    nomCours: cour.nomCour,
+                    codeCours: cour.codeCour,
+                    nomEnseignant: cour.idEnseignant,
+                }})
+                const modules = data.message.modules.map(module=>{return{
+                    idClasse: module.idClasse,
+                    idModule:module._id,
+                    nomModule: module.nomModule,
+                    codeModule: module.codeModule,
+                    matieres: module.cours.map(cour=>{return{codeCours: cour.codeCours, poids: cour.poids}}),
+                }})
+                this.props.dispatch({type: "CREATE_PERSONNEL", payload: users})
+                this.props.dispatch({type: "CREATE_COUR", payload: cours})
+                this.props.dispatch({type: "LOAD_MODULE", payload: modules})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))     
     }
 
     render() {
@@ -388,11 +509,6 @@ const mapStateToProps = (state) => {
         modules: state.Module.modules,
         personnels: state.Personnel.personnels
     }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-    };
 };
 
-export default  connect(mapStateToProps, mapDispatchToProps)(ClasseSettings)
+export default  connect(mapStateToProps)(ClasseSettings)

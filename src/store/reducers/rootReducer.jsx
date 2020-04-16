@@ -10,6 +10,7 @@ import PersonnelReducer from './PersonnelReducer';
 import RoleReducer from './RoleReducer';
 import TimeTableReducer from './TimeTableReducer';
 import TroncCommunReducer from './TroncCommunReducer';
+import UserReducer from './UserReducer';
 
 const rootReducer = combineReducers({
     Batiment:BatimentReducer,
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     Personnel: PersonnelReducer,
     Role: RoleReducer,
     TimeTable: TimeTableReducer,
-    TroncCommun: TroncCommunReducer
+    TroncCommun: TroncCommunReducer,
+    User: UserReducer,
 })
 
 export default rootReducer

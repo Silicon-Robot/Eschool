@@ -334,7 +334,7 @@ class ClasseSettings extends Component {
                 if(update.length>0){
                     fetch('https://dp-db.herokuapp.com/classe/module/cour/update', {
                     method: 'post',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                     body: JSON.stringify({
                       cours: update
                     })
@@ -360,7 +360,7 @@ class ClasseSettings extends Component {
                 if(created.length>0){
                     fetch('https://dp-db.herokuapp.com/classe/module/new', {
                         method: 'post',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                         body: JSON.stringify({
                           newModule,
                           coursArray: created
@@ -440,9 +440,9 @@ class ClasseSettings extends Component {
     }
 
     componentDidMount(){
-        fetch('https://dp-db.herokuapp.com/classe/module/users-courses-modules', {
+        fetch('http://localhost:3001/classe/module/users-courses-modules', {
             method: 'get',
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
           .then(response=>response.json())
           .then(data=>{

@@ -148,3 +148,44 @@
     font-weight: bold;
     /* color: white; */
 }
+ /*
+                The object to be created in the personnel collection is: this.state.newPersonnel
+                The object to be created in the coordonateur collection is:coordoUploadObject
+                
+                Both should be created in a transaction
+                After the creation, fetch data back to the redux state so that the interface can refresh
+            *//*
+               // fetch('http:/localhost:3001/manage-personnel/new', {
+               //           method: 'post',
+               //           headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
+               //           body: JSON.stringify({
+               //              matricule:newPersonnel.matricule,
+               //              nom:newPersonnel.nom,
+               //              prenom:newPersonnel.prenom,
+               //              email: newPersonnel.mail,
+               //              tel:newPersonnel.tel,
+               //              nomRole:newPersonnel.role,
+               //              startDate: Date.now()
+               //           })
+               //         })
+               //         .then(response=>response.json())
+               //         .then(data=>{
+               //           if(data.message){
+               //               console.log(data.message)
+               //               let user = data.message
+               //               const Personnel = {
+               //                  idPersonnel:user._id,
+               //                  matricule: user.matricule,
+               //                  nom: user.nom,
+               //                  prenom: user.prenom,
+               //                  mail: user.email,
+               //                  tel: user.tel,
+               //                  role: user.role.nomRole
+               //              }})
+               //               this.props.dispatch({type: "CREATE_PERSONNEL", payload: Personnel})
+               //           }
+               //           else{
+               //             console.log(data)
+               //           }
+               //         })
+               //         .catch(error=>console.log(error)) */

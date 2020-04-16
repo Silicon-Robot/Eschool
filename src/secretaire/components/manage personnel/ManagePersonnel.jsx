@@ -171,31 +171,61 @@ class ManagePersonnel extends Component {
 
     handleCreerClick=(e)=>{
         e.preventDefault()
+        console.log(this.state.newPersonnel)
         if(this.state.newPersonnel.matricule!=='' && this.state.newPersonnel.nom!=='' && this.state.newPersonnel.prenom!=='' && this.state.newPersonnel.mail!=='' && this.state.newPersonnel.tel!=='' && this.state.newPersonnel.role!==''){
           if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass!==''){
               
             let coordoClasses = this.props.classes.filter(classe=>classe.filiere.nomFiliere===this.state.newPersonnelCoordoClass)
             let CoordoUploadObject={matriculePersonnel:this.state.newPersonnel.matricule, classes:coordoClasses}
-            /*
-                The object to be created in the personnel collection is: this.state.newPersonnel
-                The object to be created in the coordonateur collection is:coordoUploadObject
-                
-                Both should be created in a transaction
-                After the creation, fetch data back to the redux state so that the interface can refresh
-            */
+           
            console.log(this.state.newPersonnel)
            console.log(CoordoUploadObject)
            this.setState({openNewPersonnel:false, newPersonnel:{matricule:'', nom:'', prenom:'', mail:'', tel:'', role:''}, newPersonnelCoordoClass:''})
         }
-        else if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass==='')alert('Choisir une classe pour le nouveau coordonateur')
+        else if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass===''){alert('Choisir une classe pour le nouveau coordonateur')}
         else{
             /*
             The object to be created in the personnel collection is: this.state.newPersonnel
             */
+
+            fetch('http://localhost:3001/manage-personnel/new', {
+                         method: 'post',
+                         headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
+                         body: JSON.stringify({
+                            matricule:this.state.newPersonnel.matricule,
+                            nom:this.state.newPersonnel.nom,
+                            prenom:this.state.newPersonnel.prenom,
+                            email: this.state.newPersonnel.mail,
+                            tel:this.state.newPersonnel.tel,
+                            nomRole:this.state.newPersonnel.role,
+                            startDate: Date.now()
+                         })
+                       })
+                       .then(response=>response.json())
+                       .then(data=>{
+                         if(data.message){
+                             console.log(data.message)
+                             let user = data.message
+                             const Personnel = {
+                                idPersonnel:user._id,
+                                matricule: user.matricule,
+                                nom: user.nom,
+                                prenom: user.prenom,
+                                mail: user.email,
+                                tel: user.tel,
+                                role: user.nomRole
+                            }
+                             this.props.dispatch({type: "CREATE_PERSONNEL", payload: Personnel})
+                         }
+                         else{
+                           console.log(data)
+                         }
+                       })
+                       .catch(error=>console.log(error)) 
            console.log(this.state.newPersonnel)
            this.setState({openNewPersonnel:false, newPersonnel:{matricule:'', nom:'', prenom:'', mail:'', tel:'', role:''}, newPersonnelCoordoClass:''})
         }
-       }else alert('Enter all the data to create a coordo.\nDetected presence of some empty fields.')
+       }else{ alert('Enter all the data to create a coordo.\nDetected presence of some empty fields.')}
     }
 
     handleCreerCancel=()=>{

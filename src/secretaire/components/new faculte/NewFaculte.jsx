@@ -52,7 +52,7 @@ class NewFaculte extends Component
 		console.log(facultyIndex,this.props.facultes[facultyIndex-1])
 		fetch(`https://dp-db.herokuapp.com/faculty/${this.props.facultes[facultyIndex-1]._id}/delete`, {
             method: 'delete',
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
           .then(response=>response.json())
           .then(data=>{
@@ -107,7 +107,7 @@ class NewFaculte extends Component
 			let newFilieres = this.state.filieres.map(filiere=>{ return{nomFiliere: filiere.nomFiliere, maxNiveau: filiere.niveauMax, startDate: Date.now()}})
 			fetch('https://dp-db.herokuapp.com/faculty/new', {
             method: 'post',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
             body: JSON.stringify({
               nomFaculty: this.state.nomFaculte,
               filieres: newFilieres,
@@ -182,13 +182,22 @@ class NewFaculte extends Component
             if(data.message){
 	            let classes = await fetch('https://dp-db.herokuapp.com/classe/', {
 		            method: 'get',
-		            headers: {'Content-Type': 'application/json'}
+		            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
 	         		 })
 		          .then(response=>response.json())
 		          
 		          if(!classes.message) throw Error("Couldn't retrieve classes");
 		          console.log(classes.message)
-		          classes.message = classes.message.map(classe=> {return {idClasse:classe._id, filiere:{nomFiliere:classe.nomClasse, idFiliere: classe.idFiliere}, niveau:classe.niveau}})
+		          classes.message = classes.message.map(classe=> {
+		          	return {
+		          		idClasse:classe._id, 
+		          		filiere:{
+		          			nomFiliere:classe.nomClasse, 
+		          			idFiliere: classe.idFiliere
+		          		}, 
+		          		niveau:classe.niveau
+		          	}
+		          })
 		          await this.props.dispatch({type: "CREATE_CLASSE", payload: classes.message})
 
             	let Facultx = data.message.map((faculty,j)=>{

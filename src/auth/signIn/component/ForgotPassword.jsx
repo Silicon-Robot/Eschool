@@ -43,7 +43,7 @@ class ForgotPassword extends Component {
 
         fetch('https://dp-db.herokuapp.com/reset-password', {
             method: 'put',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
             body: JSON.stringify({
               id: id,
               password: this.state.password

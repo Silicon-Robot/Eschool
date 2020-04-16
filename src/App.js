@@ -25,7 +25,7 @@ class App extends React.Component {
             <
             Route exact path = '/manage-personnels' > < ManagePersonnel / > < /Route> <
             Route exact path = '/settings' > < Settings / > < /Route> <
-            Route exact path = '/restpwd' > < ForgotPassword / > < /Route> <
+            Route exact path = '/resetpwd' > < ForgotPassword / > < /Route> <
             Route exact path = '/sendMail' > < SendMail / > < /Route> <
             Route exact path = '/signup' > < SignUp / > < /Route> <
             Route exact path = '/' > < SignIn / > < /Route> <

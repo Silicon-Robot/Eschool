@@ -22,11 +22,11 @@ class App extends React.Component {
             <
             Switch >
             <
-            Route exact path = '/' > < Settings / > < /Route> <
+            Route exact path = '/settings' > < Settings / > < /Route> <
             Route exact path = '/restpwd' > < ForgotPassword / > < /Route> <
             Route exact path = '/sendMail' > < SendMail / > < /Route> <
             Route exact path = '/signup' > < SignUp / > < /Route> <
-            Route exact path = '/signin' > < SignIn / > < /Route> <
+            Route exact path = '/' > < SignIn / > < /Route> <
             Redirect to = '/' / >
             hello <
             /Switch> < /

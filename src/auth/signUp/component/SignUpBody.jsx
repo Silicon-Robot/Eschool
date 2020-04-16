@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import parseJwt from '../../../shared/utils/parseJwt.js';
 import {setUser} from '../../../store/actions/user.actions';
@@ -101,4 +102,4 @@ const mapDispatchToProps = dispatch => ({
     setUser: (user)=>dispatch(setUser(user)),
 })
 
-export default connect(null,mapDispatchToProps)(SignUpBody);
+export default withRouter(connect(null,mapDispatchToProps)(SignUpBody));

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { setUser } from '../../../store/actions/user.actions';
 
@@ -39,12 +40,14 @@ class SignInBody extends Component {
               window.localStorage.setItem('auth',auth)
               const user = {...(parseJwt(token).user), history:null, hash:null, role:{...(parseJwt(token))}.user.role.nomRole }
               this.props.setUser(user)
+              console.log(user.role,this.props)
               if(user.role==="secretaire"){
               this.props.history.push("/manage-personnels")
               } else if(user.role==="coordo"){
                 this.props.history.push("/coordo")
               }
               else{
+                console.log("hello")
                 this.props.history.push("/underdevelopment")
               }
             }
@@ -71,4 +74,4 @@ const mapDispatchToProps = dispatch => ({
     setUser: (user)=>dispatch(setUser(user)),
 })
 
-export default connect(null,mapDispatchToProps)(SignInBody);
+export default withRouter(connect(null,mapDispatchToProps)(SignInBody));

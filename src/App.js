@@ -29,6 +29,7 @@ class App extends React.Component {
             Route exact path = '/sendMail' > < SendMail / > < /Route> <
             Route exact path = '/signup' > < SignUp / > < /Route> <
             Route exact path = '/' > < SignIn / > < /Route> <
+            Route exact path = '/underdevelopment' ><h1>Welcome</h1>< /Route> <
             Redirect to = '/' / >
             hello <
             /Switch> < /

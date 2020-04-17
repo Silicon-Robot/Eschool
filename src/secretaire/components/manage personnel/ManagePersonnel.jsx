@@ -291,6 +291,49 @@ class ManagePersonnel extends Component {
         </div>
     )
     
+    componentDidMount(){
+        console.log(this.props)
+       fetch('http://localhost:3001/classe/module/users-courses-modules', {
+            method: 'get',
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.message){
+                const users = data.message.users.map(user=>{return{
+                    idPersonnel:user._id,
+                    matricule: user.matricule,
+                    nom: user.nom,
+                    prenom: user.prenom,
+                    mail: user.email,
+                    tel: user.tel,
+                    role: user.role.nomRole
+                }})
+                const cours = data.message.courses.map(cour=>{return{
+                    idCour:cour._id,
+                    classe: cour.classes,
+                    nomCours: cour.nomCour,
+                    codeCours: cour.codeCour,
+                    nomEnseignant: cour.idEnseignant,
+                }})
+                const modules = data.message.modules.map(module=>{return{
+                    idClasse: module.idClasse,
+                    idModule:module._id,
+                    nomModule: module.nomModule,
+                    codeModule: module.codeModule,
+                    matieres: module.cours.map(cour=>{return{codeCours: cour.codeCours, poids: cour.poids}}),
+                }})
+                this.props.dispatch({type: "LOAD_PERSONNEL", payload: users})
+                this.props.dispatch({type: "LOAD_COUR", payload: cours})
+                this.props.dispatch({type: "LOAD_MODULE", payload: modules})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))      
+    }
+
     render() {
         return (
             <div>

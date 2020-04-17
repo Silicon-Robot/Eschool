@@ -175,7 +175,7 @@ class NewFaculte extends Component
 	componentDidMount(){
 		fetch('https://dp-db.herokuapp.com/faculty/', {
             method: 'get',
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
           .then(response=>response.json())
           .then(async data=>{

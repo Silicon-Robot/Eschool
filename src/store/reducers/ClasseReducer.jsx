@@ -5,7 +5,7 @@ const initState = {
 
 const classeReducer = (state = initState, action)=>{
     switch(action.type){
-        case 'CREATE_CLASSE':
+        case 'LOAD_CLASSE':
             return{...state, classes:[...state.classes, ...action.payload]}
         default:
             return state

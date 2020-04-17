@@ -470,8 +470,8 @@ class ClasseSettings extends Component {
                     codeModule: module.codeModule,
                     matieres: module.cours.map(cour=>{return{codeCours: cour.codeCours, poids: cour.poids}}),
                 }})
-                this.props.dispatch({type: "CREATE_PERSONNEL", payload: users})
-                this.props.dispatch({type: "CREATE_COUR", payload: cours})
+                this.props.dispatch({type: "LOAD_PERSONNEL", payload: users})
+                this.props.dispatch({type: "LOAD_COUR", payload: cours})
                 this.props.dispatch({type: "LOAD_MODULE", payload: modules})
             }
             else{

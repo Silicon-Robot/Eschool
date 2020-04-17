@@ -5,7 +5,7 @@ const initState = {
 
 const courReducer = (state = initState, action)=>{
     switch(action.type){
-        case 'CREATE_COUR':
+        case 'LOAD_COUR':
             return{...state, cours:[...state.cours, ...action.payload]}       
         case 'UPDATE_COUR':
         	let index;

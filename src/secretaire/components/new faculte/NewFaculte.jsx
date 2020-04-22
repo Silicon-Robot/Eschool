@@ -198,7 +198,7 @@ class NewFaculte extends Component
 		          		niveau:classe.niveau
 		          	}
 		          })
-		          await this.props.dispatch({type: "CREATE_CLASSE", payload: classes.message})
+		          await this.props.dispatch({type: "LOAD_CLASSE", payload: classes.message})
 
             	let Facultx = data.message.map((faculty,j)=>{
             		return{

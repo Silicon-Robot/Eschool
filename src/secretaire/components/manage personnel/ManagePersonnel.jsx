@@ -25,6 +25,22 @@ class ManagePersonnel extends Component {
             1. Delete the personnel with this matricule
             2. fetch the personnel collection from the database and load the personnel part of redux
         */
+        let Perso = this.props.personnels.find(personnel=>personnel.matricule===personnelMatricule)
+        fetch(`https://dp-db.herokuapp.com/manage-personnel/${Perso.idPersonnel}/delete`, {
+            method: 'delete',
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            console.log(data.message)
+            if(data.message){
+              this.props.dispatch({type: "DELETE_PERSONNEL", payload: personnelMatricule})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))     
         alert('deleted personnel with matricule: '+personnelMatricule)
     }
 
@@ -52,10 +68,13 @@ class ManagePersonnel extends Component {
     }
 
     handleEditSave=(e)=>{
+        console.log(this.state.editableObject)
+        let updatedPersonnel = this.state.editableObject
         if(this.state.editableObject.mail!=='' && this.state.editableObject.tel!=='' && this.state.role!==''){
             if(this.state.editableObject.role==='coordonateur' && this.state.newCoordoClass!==''){
                 let coordoClasses = this.props.classes.filter(classe=>classe.filiere.nomFiliere===this.state.newPersonnelCoordoClass)
                 let coordoUploadObject={matriculePersonnel:this.state.editableObject.matricule, classes:coordoClasses}
+                console.log(coordoUploadObject)
                 /*
                     The document to change in the backend has matricule: e.target.id
                     and it should be updated with the object: this.state.editableObject
@@ -65,6 +84,30 @@ class ManagePersonnel extends Component {
                     Both should be created in a transaction (the update and the creation of the new coordo)
                     After having updated these field, fetch the personnel data back to the redux state so the interface can refresh
                 */
+                 fetch(`https://dp-db.herokuapp.com/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
+                         method: 'put',
+                         headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
+                         body: JSON.stringify({
+                            matricule:this.state.editableObject.matricule,
+                            nom:this.state.editableObject.nom,
+                            prenom:this.state.editableObject.prenom,
+                            email: this.state.editableObject.mail,
+                            tel:this.state.editableObject.tel,
+                            role:this.state.editableObject.role,
+                            classe:coordoUploadObject.classes.map(classe=>classe.idClasse)
+                         })
+                       })
+                       .then(response=>response.json())
+                       .then(data=>{
+                         if(data.message){
+                             console.log(data.message,updatedPersonnel)
+                            this.props.dispatch({type: "UPDATE_PERSONNEL", payload: updatedPersonnel})
+                         }
+                         else{
+                           console.log(data)
+                         }
+                       })
+                       .catch(error=>console.log(error)) 
             }else if(this.state.editableObject.role==='coordonateur' && this.state.newCoordoClass==='')alert('Invalid filiere.\nhoose a filiere and for the newly created coordo')
             else{
                 /*
@@ -73,6 +116,30 @@ class ManagePersonnel extends Component {
 
                     After having updated these field, fetch the personnel data back to the redux state so the interface can refresh
                 */
+
+                    fetch(`https://dp-db.herokuapp.com/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
+                         method: 'put',
+                         headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
+                         body: JSON.stringify({
+                            matricule:this.state.editableObject.matricule,
+                            nom:this.state.editableObject.nom,
+                            prenom:this.state.editableObject.prenom,
+                            email: this.state.editableObject.mail,
+                            tel:this.state.editableObject.tel,
+                            role:this.state.editableObject.role
+                         })
+                       })
+                       .then(response=>response.json())
+                       .then(data=>{
+                         if(data.message){
+                             console.log(data.message,updatedPersonnel)
+                            this.props.dispatch({type: "UPDATE_PERSONNEL", payload: updatedPersonnel})
+                         }
+                         else{
+                           console.log(data)
+                         }
+                       })
+                       .catch(error=>console.log(error)) 
             }
 
             this.handleEditCancel()
@@ -120,7 +187,7 @@ class ManagePersonnel extends Component {
                     <select id='newCoordoClass' onChange={this.handleEditChange}>
                         {
                             this.props.faculties.map(faculty=>(
-                                <optgroup key={faculty.nomFaculty} label={faculty.nomFaculty}>
+                                <optgroup key={faculty.nomFaculte} label={faculty.nomFaculte}>
                                     {faculty.filieres.map(filiere=><option key={filiere.nomFiliere}>{filiere.nomFiliere}</option>)}
                                 </optgroup>
                             ))
@@ -176,19 +243,8 @@ class ManagePersonnel extends Component {
           if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass!==''){
               
             let coordoClasses = this.props.classes.filter(classe=>classe.filiere.nomFiliere===this.state.newPersonnelCoordoClass)
-            let CoordoUploadObject={matriculePersonnel:this.state.newPersonnel.matricule, classes:coordoClasses}
-           
-           console.log(this.state.newPersonnel)
-           console.log(CoordoUploadObject)
-           this.setState({openNewPersonnel:false, newPersonnel:{matricule:'', nom:'', prenom:'', mail:'', tel:'', role:''}, newPersonnelCoordoClass:''})
-        }
-        else if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass===''){alert('Choisir une classe pour le nouveau coordonateur')}
-        else{
-            /*
-            The object to be created in the personnel collection is: this.state.newPersonnel
-            */
-
-            fetch('http://localhost:3001/manage-personnel/new', {
+            let coordoUploadObject={matriculePersonnel:this.state.newPersonnel.matricule, classes:coordoClasses}
+             fetch('https://dp-db.herokuapp.com/manage-personnel/new', {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -197,7 +253,52 @@ class ManagePersonnel extends Component {
                             prenom:this.state.newPersonnel.prenom,
                             email: this.state.newPersonnel.mail,
                             tel:this.state.newPersonnel.tel,
-                            nomRole:this.state.newPersonnel.role,
+                            role:this.state.newPersonnel.role,
+                            startDate: Date.now(),
+                            classes: coordoUploadObject.classes.map(classe=>classe.idClasse)
+                         })
+                       })
+                       .then(response=>response.json())
+                       .then(data=>{
+                         if(data.message){
+                             console.log(data.message)
+                             let user = data.message
+                             const Personnel = {
+                                idPersonnel:user._id,
+                                matricule: user.matricule,
+                                nom: user.nom,
+                                prenom: user.prenom,
+                                mail: user.email,
+                                tel: user.tel,
+                                role: user.role
+                            }
+                             this.props.dispatch({type: "LOAD_PERSONNEL", payload: [Personnel]})
+                         }
+                         else{
+                           console.log(data)
+                         }
+                       })
+                       .catch(error=>console.log(error)) 
+           console.log(this.state.newPersonnel)
+           console.log(coordoUploadObject)
+           this.setState({openNewPersonnel:false, newPersonnel:{matricule:'', nom:'', prenom:'', mail:'', tel:'', role:''}, newPersonnelCoordoClass:''})
+        }
+        else if(this.state.newPersonnel.role==='coordonateur' && this.state.newPersonnelCoordoClass===''){alert('Choisir une classe pour le nouveau coordonateur')}
+        else{
+            /*
+            The object to be created in the personnel collection is: this.state.newPersonnel
+            */
+
+            fetch('https://dp-db.herokuapp.com/manage-personnel/new', {
+                         method: 'post',
+                         headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
+                         body: JSON.stringify({
+                            matricule:this.state.newPersonnel.matricule,
+                            nom:this.state.newPersonnel.nom,
+                            prenom:this.state.newPersonnel.prenom,
+                            email: this.state.newPersonnel.mail,
+                            tel:this.state.newPersonnel.tel,
+                            role:this.state.newPersonnel.role,
                             startDate: Date.now()
                          })
                        })
@@ -213,15 +314,15 @@ class ManagePersonnel extends Component {
                                 prenom: user.prenom,
                                 mail: user.email,
                                 tel: user.tel,
-                                role: user.nomRole
+                                role: user.role
                             }
-                             this.props.dispatch({type: "CREATE_PERSONNEL", payload: Personnel})
+                             this.props.dispatch({type: "LOAD_PERSONNEL", payload: [Personnel]})
                          }
                          else{
                            console.log(data)
                          }
                        })
-                       .catch(error=>console.log(error)) 
+                        .catch(error=>console.log(error)) 
            console.log(this.state.newPersonnel)
            this.setState({openNewPersonnel:false, newPersonnel:{matricule:'', nom:'', prenom:'', mail:'', tel:'', role:''}, newPersonnelCoordoClass:''})
         }
@@ -260,7 +361,7 @@ class ManagePersonnel extends Component {
                         <select id='newPersonnelCoordoClass' onChange={this.handleChangeNewPersonnel}>
                             {
                                 this.props.faculties.map(faculty=>(
-                                    <optgroup key={faculty.nomFaculty} label={faculty.nomFaculty}>
+                                    <optgroup key={faculty.nomFaculte} label={faculty.nomFaculte}>
                                         {faculty.filieres.map(filiere=><option key={filiere.nomFiliere}>{filiere.nomFiliere}</option>)}
                                     </optgroup>
                                 ))
@@ -293,7 +394,7 @@ class ManagePersonnel extends Component {
     
     componentDidMount(){
         console.log(this.props)
-       fetch('http://localhost:3001/classe/module/users-courses-modules', {
+       fetch('https://dp-db.herokuapp.com/manage-personnel/users-classes-faculties', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -307,25 +408,36 @@ class ManagePersonnel extends Component {
                     prenom: user.prenom,
                     mail: user.email,
                     tel: user.tel,
-                    role: user.role.nomRole
+                    role: user.role
                 }})
-                const cours = data.message.courses.map(cour=>{return{
-                    idCour:cour._id,
-                    classe: cour.classes,
-                    nomCours: cour.nomCour,
-                    codeCours: cour.codeCour,
-                    nomEnseignant: cour.idEnseignant,
-                }})
-                const modules = data.message.modules.map(module=>{return{
-                    idClasse: module.idClasse,
-                    idModule:module._id,
-                    nomModule: module.nomModule,
-                    codeModule: module.codeModule,
-                    matieres: module.cours.map(cour=>{return{codeCours: cour.codeCours, poids: cour.poids}}),
-                }})
+                const classes = data.message.classes.map(classe=> {
+                    return {
+                        idClasse:classe._id, 
+                        filiere:{
+                            nomFiliere:classe.nomClasse, 
+                            idFiliere: classe.idFiliere
+                        }, 
+                        niveau:classe.niveau
+                    }
+                  })
+                const Facultx = data.message.faculties.map((faculty,j)=>{
+                    return{
+                    nomFaculte: faculty.nomFaculty,
+                    filieres: faculty.filieres.map((filiere,i)=>{
+                        return {
+                         nomFiliere: filiere.nomFiliere, 
+                         niveauMax: filiere.maxNiveau, 
+                         index: i+1,
+                         _id: filiere._id
+                        }
+                    }), 
+                    index: j+1,
+                    _id: faculty._id
+                  }
+                })
                 this.props.dispatch({type: "LOAD_PERSONNEL", payload: users})
-                this.props.dispatch({type: "LOAD_COUR", payload: cours})
-                this.props.dispatch({type: "LOAD_MODULE", payload: modules})
+                this.props.dispatch({type: "LOAD_CLASSE", payload: classes})
+                this.props.dispatch({type: "CREATE_FACULTY", payload: Facultx})
             }
             else{
               console.log(data)

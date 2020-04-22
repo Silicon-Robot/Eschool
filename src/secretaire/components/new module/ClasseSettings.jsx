@@ -440,7 +440,7 @@ class ClasseSettings extends Component {
     }
 
     componentDidMount(){
-        fetch('http://localhost:3001/classe/module/users-courses-modules', {
+        fetch('https://dp-db.herokuapp.com/classe/module/users-courses-modules', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -454,7 +454,7 @@ class ClasseSettings extends Component {
                     prenom: user.prenom,
                     mail: user.email,
                     tel: user.tel,
-                    role: user.role.nomRole
+                    role: user.role
                 }})
                 const cours = data.message.courses.map(cour=>{return{
                     idCour:cour._id,

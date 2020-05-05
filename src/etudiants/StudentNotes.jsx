@@ -40,7 +40,7 @@ class StudentNotes extends Component {
         </div>
     )
     componentDidMount(){
-        fetch('https://dp-db.herokuapp.comstudent/compos/notes-courses', {
+        fetch('https://dp-db.herokuapp.com/student/compos/notes-courses', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

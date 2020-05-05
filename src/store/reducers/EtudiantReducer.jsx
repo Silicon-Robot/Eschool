@@ -1,6 +1,6 @@
 const initState = {
     etudiants:[
-        {idEtudiant:1, matricule:'17C005', nom:'Kouatchoua Tchakoumi', prenom:'Lorrain', idClasse:18, mail:'lorraintchakoumi@gmail.com', telephone:657140183}
+        // {idEtudiant:1, matricule:'17C005', nom:'Kouatchoua Tchakoumi', prenom:'Lorrain', idClasse:18, mail:'lorraintchakoumi@gmail.com', telephone:657140183}
     ]
 }
 

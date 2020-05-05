@@ -1,12 +1,14 @@
 const initState = {
-    troncCommuns: [{
-        _id:'YongwaWorld',
-        idCours:'TchanaWorld',
-        niveau:3,
-        classes: ['NtchamiWorld'],
-        startDate:'01/04/2020',
-        history: []
-    }]
+    troncCommuns: [
+    // {
+    //     _id:'YongwaWorld',
+    //     idCours:'TchanaWorld',
+    //     niveau:3,
+    //     classes: ['NtchamiWorld'],
+    //     startDate:'01/04/2020',
+    //     history: []
+    // }
+    ]
 }
 
 const TroncCommunReducer = (state = initState, action)=>{

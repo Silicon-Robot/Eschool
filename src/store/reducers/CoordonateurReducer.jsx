@@ -1,16 +1,16 @@
 const initState = {
     coordonateurs:[
-    {
-        idCoordonateur:'KamdaWorld',
-        matriculePersonnel:'babatas',
-        idPersonnel:6,
-        classes: ['IRT 3', 'IRT 2', 'IRT 1'],
-        timetables:[
-            {classe:'IRT 1', timetable:{}},
-            {classe:'IRT 2', timetable:{}},
-            {classe:'IRT 3', timetable:{}},
-        ],
-    }
+    // {
+    //     idCoordonateur:'KamdaWorld',
+    //     matriculePersonnel:'babatas',
+    //     idPersonnel:6,
+    //     classes: ['IRT 3', 'IRT 2', 'IRT 1'],
+    //     timetables:[
+    //         {classe:'IRT 1', timetable:{}},
+    //         {classe:'IRT 2', timetable:{}},
+    //         {classe:'IRT 3', timetable:{}},
+    //     ],
+    // }
     ]
 }
 

@@ -78,7 +78,7 @@ class Devoir extends Component {
                         <span className='askedQuestionIndications'>{question.indications}</span>
                         <span className='askedQuestionIndications'>{question.question}</span>
                         {/* upload and image and display here on a 100 x 100 scale if there is a ref to this question */}
-                        {question.refFiles.map((id,i)=><img key={i} src={"https://dp-db.herokuapp.comteacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>)}
+                        {question.refFiles.map((id,i)=><img key={i} src={"https://dp-db.herokuapp.com/teacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>)}
                         
                       {questionType==='QCM'?(
                             <form  className="displayOptions">
@@ -117,7 +117,7 @@ class Devoir extends Component {
 
                 1. change the copie with idCopie: findCopie.idCopie with findCopie
             */
-             fetch(`https://dp-db.herokuapp.comstudent/compos/examen/${findCopie.idCopie}/update`, {
+             fetch(`https://dp-db.herokuapp.com/student/compos/examen/${findCopie.idCopie}/update`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -167,7 +167,7 @@ class Devoir extends Component {
                 1. the new copie to be created is toBeUploadedCopie
             */
             console.log("hello",toBeUploadedCopie,this.state,id)
-            fetch(`https://dp-db.herokuapp.comstudent/compos/examen/new`, {
+            fetch(`https://dp-db.herokuapp.com/student/compos/examen/new`, {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -241,7 +241,7 @@ class Devoir extends Component {
         dateTime=dateTime.split(' G')[0]
     }
     componentDidMount() {
-        fetch('https://dp-db.herokuapp.comstudent/compos/examen', {
+        fetch('https://dp-db.herokuapp.com/student/compos/examen', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

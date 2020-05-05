@@ -156,7 +156,7 @@ class TeacherTimetable extends Component {
     }
  componentDidMount(){
   console.log('passing here')
-        fetch('https://dp-db.herokuapp.comteacher/timetable', {
+        fetch('https://dp-db.herokuapp.com/teacher/timetable', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

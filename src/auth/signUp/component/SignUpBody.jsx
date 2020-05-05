@@ -41,7 +41,7 @@ class SignUpBody extends Component {
 
     handleSubmit=(e)=>{
         e.preventDefault()
-        fetch('https://dp-db.herokuapp.com/signup', {
+        fetch('https://dp-db.herokuapp.comsignup', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -52,7 +52,7 @@ class SignUpBody extends Component {
               prenom: this.state.prenom,
               startDate:Date.now(),
               password: this.state.password,
-              nomRole:this.state.role
+              role:this.state.role
             })
             })
           .then(response=>response.json())
@@ -61,15 +61,17 @@ class SignUpBody extends Component {
               const { token, auth } = data.message
               window.localStorage.setItem('token',token)
               window.localStorage.setItem('auth',auth)
-              const user = {...(parseJwt(token).user), history:null, hash:null, role:{...(parseJwt(token))}.user.role.nomRole }
+              const user = {...(parseJwt(token).user), history:null, hash:null, role:{...(parseJwt(token))}.user.role }
               this.props.setUser(user)
               if(user.role==="secretaire"){
               this.props.history.push("/manage-personnels")
-              } else if(user.role==="coordo"){
+              } else if(user.role==="coordonnateur"){
                 this.props.history.push("/coordo")
+              }else if(user.role==="enseignant"){
+                this.props.history.push("/teacher")
               }
               else{
-                this.props.history.push("/underdevelopment")
+                this.props.history.push("/student")
               }
             }
             else{

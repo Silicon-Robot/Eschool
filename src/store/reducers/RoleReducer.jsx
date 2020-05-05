@@ -1,7 +1,7 @@
 const initState = {
     roles: [
         {id:1, nomRole:'enseignant'},
-        {id:2, nomRole:'coordonateur'},
+        {id:2, nomRole:'coordonnateur'},
         {id:3, nomRole:'secretaire'},
     ]
 }

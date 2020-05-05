@@ -42,7 +42,7 @@ class TeacherCourses extends Component {
             */
             let teacherId = this.state.actualTeacher;
             let codeCour = this.state.actualSubject.split(" ")[0];
-              fetch(`https://dp-db.herokuapp.com/coordo/teacher-courses/update-cour`, {
+              fetch(`https://dp-db.herokuapp.comcoordo/teacher-courses/update-cour`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -201,7 +201,7 @@ class TeacherCourses extends Component {
     }
     componentDidMount(){
         console.log(this.props)
-       fetch('https://dp-db.herokuapp.com/coordo/teacher-courses/users-courses-modules-faculties-classes', {
+       fetch('https://dp-db.herokuapp.comcoordo/teacher-courses/users-courses-modules-faculties-classes', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

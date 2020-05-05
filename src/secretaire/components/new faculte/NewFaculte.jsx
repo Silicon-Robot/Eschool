@@ -50,7 +50,7 @@ class NewFaculte extends Component
 	
 	handleDeleteFaculty=(facultyIndex)=>{
 		console.log(facultyIndex,this.props.facultes[facultyIndex-1])
-		fetch(`https://dp-db.herokuapp.com/faculty/${this.props.facultes[facultyIndex-1]._id}/delete`, {
+		fetch(`https://dp-db.herokuapp.comfaculty/${this.props.facultes[facultyIndex-1]._id}/delete`, {
             method: 'delete',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -105,7 +105,7 @@ class NewFaculte extends Component
 			//this is the data to be uploaded
 			// uploadData is the faculty to be created... verify that the data in it coincides with the data to be uploaded then upload. without which please try to complete it as it should be.
 			let newFilieres = this.state.filieres.map(filiere=>{ return{nomFiliere: filiere.nomFiliere, maxNiveau: filiere.niveauMax, startDate: Date.now()}})
-			fetch('https://dp-db.herokuapp.com/faculty/new', {
+			fetch('https://dp-db.herokuapp.comfaculty/new', {
             method: 'post',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
             body: JSON.stringify({
@@ -173,14 +173,14 @@ class NewFaculte extends Component
 	}
 
 	componentDidMount(){
-		fetch('https://dp-db.herokuapp.com/faculty/', {
+		fetch('https://dp-db.herokuapp.comfaculty/', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
           .then(response=>response.json())
           .then(async data=>{
             if(data.message){
-	            let classes = await fetch('https://dp-db.herokuapp.com/classe/', {
+	            let classes = await fetch('https://dp-db.herokuapp.comclasse/', {
 		            method: 'get',
 		            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
 	         		 })

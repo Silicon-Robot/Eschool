@@ -39,7 +39,7 @@ class SendMailBody extends Component {
         document.getElementsByClassName('sendMailBtn')[0].setAttribute('hidden','true')
         document.getElementsByClassName('sendMailForm')[0].removeAttribute(onsubmit)
 
-        fetch('https://dp-db.herokuapp.com/send-mail', {
+        fetch('https://dp-db.herokuapp.comsend-mail', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

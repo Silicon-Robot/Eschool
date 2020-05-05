@@ -332,7 +332,7 @@ class ClasseSettings extends Component {
                     }
                 })
                 if(update.length>0){
-                    fetch('https://dp-db.herokuapp.com/classe/module/cour/update', {
+                    fetch('http://localhost:3001/classe/module/cour/update', {
                     method: 'post',
                     headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                     body: JSON.stringify({
@@ -358,7 +358,7 @@ class ClasseSettings extends Component {
                   .catch(error=>console.log(error))   
                   }      
                 if(created.length>0){
-                    fetch('https://dp-db.herokuapp.com/classe/module/new', {
+                    fetch('http://localhost:3001/classe/module/new', {
                         method: 'post',
                         headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                         body: JSON.stringify({
@@ -440,7 +440,7 @@ class ClasseSettings extends Component {
     }
 
     componentDidMount(){
-        fetch('https://dp-db.herokuapp.com/classe/module/users-courses-modules', {
+        fetch('http://localhost:3001/classe/module/users-courses-modules', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

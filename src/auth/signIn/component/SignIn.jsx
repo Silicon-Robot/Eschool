@@ -24,7 +24,7 @@ class SignInBody extends Component {
     
     handleSubmit=(e)=>{
         e.preventDefault();
-          fetch('https://dp-db.herokuapp.com/signin', {
+          fetch('https://dp-db.herokuapp.comsignin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -38,17 +38,19 @@ class SignInBody extends Component {
               const { token, auth } = data.message
               window.localStorage.setItem('token',token)
               window.localStorage.setItem('auth',auth)
-              const user = {...(parseJwt(token).user), history:null, hash:null, role:{...(parseJwt(token))}.user.role.nomRole }
+              const user = {...(parseJwt(token).user), history:null, hash:null, role:{...(parseJwt(token))}.user.role }
               this.props.setUser(user)
               console.log(user.role,this.props)
               if(user.role==="secretaire"){
               this.props.history.push("/manage-personnels")
-              } else if(user.role==="coordo"){
+              } else if(user.role==="coordonnateur"){
                 this.props.history.push("/coordo")
+              }else if(user.role==="enseignant"){
+                this.props.history.push("/teacher")
               }
               else{
                 console.log("hello")
-                this.props.history.push("/underdevelopment")
+                this.props.history.push("/student")
               }
             }
             else{

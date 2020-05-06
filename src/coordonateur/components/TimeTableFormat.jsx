@@ -203,7 +203,7 @@ class TimeTableFormat extends Component {
             3. when you already know the class, update the timetable of that class with : uploadData
             4. fetch the coordonateur collection and feed the coordonateur reducer with.
         */
-        fetch(`http://localhost:3001/coordo/timetable/update`, {
+        fetch(`https://dp-db.herokuapp.com/coordo/timetable/update`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -257,7 +257,7 @@ class TimeTableFormat extends Component {
             5. when you already know the class, update the timetable of that class with : uploadData
             6. fetch the coordonateur collection and feed the coordonateur reducer with.
         */
-         fetch(`http://localhost:3001/coordo/timetable/update-publish`, {
+         fetch(`https://dp-db.herokuapp.com/coordo/timetable/update-publish`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -298,7 +298,7 @@ class TimeTableFormat extends Component {
 
     }
     componentDidMount(){
-        fetch('http://localhost:3001/coordo/timetable/coordo-classes-timetables-courses-batiment-faculties-users', {
+        fetch('https://dp-db.herokuapp.com/coordo/timetable/coordo-classes-timetables-courses-batiment-faculties-users', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

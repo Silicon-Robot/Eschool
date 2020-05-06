@@ -36,7 +36,7 @@ class App extends React.Component {
     // componentDidMount(){
     //     let token = window.localStorage.getItem('token');
     //     if(token && !this.props.user._id){
-    //         fetch('http://localhost:3001/signin-token', {
+    //         fetch('https://dp-db.herokuapp.com/signin-token', {
     //             method: 'post',
     //             headers: {'Content-Type': 'application/json'},
     //             body: JSON.stringify({

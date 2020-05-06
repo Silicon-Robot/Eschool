@@ -92,7 +92,7 @@ class TeacherForum extends Component {
         //if its an image, then display the image in the img tag
         //else make the ref downloadable on click
         //adjust the return below to either be an image or a link that downloads a ref on Click
-        let refFile = !message.refFile?null:message.refFile.filetype.split('/').includes('image')?(<img src={"http://localhost:3001/forum/file/"+message.refFile.link} alt='refFile' className='messageImage' />): <a href={"http://localhost:3001/forum/file/"+message.refFile.link} download={message.refFile.name}>{message.refFile.name}</a>
+        let refFile = !message.refFile?null:message.refFile.filetype.split('/').includes('image')?(<img src={"https://dp-db.herokuapp.com/forum/file/"+message.refFile.link} alt='refFile' className='messageImage' />): <a href={"https://dp-db.herokuapp.com/forum/file/"+message.refFile.link} download={message.refFile.name}>{message.refFile.name}</a>
 
         return (
             <div key={key} className={messageClassName+ ' message'}>
@@ -140,7 +140,7 @@ class TeacherForum extends Component {
         if(this.state.refFile!=='' || this.state.message!==''){
             let ref = null;
             if(this.state.refFile){
-               let data = await fetch('http://localhost:3001/forum/upload', {
+               let data = await fetch('https://dp-db.herokuapp.com/forum/upload', {
                          method: 'post',
                          body: this.state.refFile
                        })
@@ -214,7 +214,7 @@ class TeacherForum extends Component {
             <div className="supportsCours">
                 {supports.map(support=>!support?null:(
                     <div className='support' key={support.ref}>
-                        <a href={`http://localhost:3001/forum/file/${support.link}`} download={support.nameFile}>
+                        <a href={`https://dp-db.herokuapp.com/forum/file/${support.link}`} download={support.nameFile}>
                             <i className={'fa fa-'+(this.fileTypeIcons[support.nameFile.split('.')[support.nameFile.split('.').length-1]] || 'file' )+'-o'} />
                             <span className='nomSupport'>{support.nameFile}</span>
                         </a>
@@ -242,7 +242,7 @@ class TeacherForum extends Component {
             add this.state.newSupport to the gridFS or i don't know what.
             The refName of this file to store in gridFS should be: ref
         */
-        let data = await fetch(`http://localhost:3001/forum/uploadSupport/${ref}`, {
+        let data = await fetch(`https://dp-db.herokuapp.com/forum/uploadSupport/${ref}`, {
                          method: 'post',
                          body: formData
                        })
@@ -271,7 +271,7 @@ class TeacherForum extends Component {
         )
     }
     componentDidMount(){
-         fetch('http://localhost:3001/teacher/forum', {
+         fetch('https://dp-db.herokuapp.com/teacher/forum', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -335,7 +335,7 @@ class TeacherForum extends Component {
             }
           })
           .catch(error=>console.log(error))      
-    this.socket = io("http://localhost:3001");
+    this.socket = io("https://dp-db.herokuapp.com");
 
     this.socket.on('init', (msg) => {
        // this.scrollToBottom()

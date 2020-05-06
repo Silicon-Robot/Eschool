@@ -18,7 +18,7 @@ class Examen extends Component {
     componentDidMount() {
         this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
 
-        fetch('http://localhost:3001/student/compos/examen', {
+        fetch('https://dp-db.herokuapp.com/student/compos/examen', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -282,7 +282,7 @@ class Examen extends Component {
                         <span className='askedQuestionHeader'>Question {index}</span>
                         <span className='askedQuestionIndications'>{question.indications}</span>
                         <span className='askedQuestionIndications'>{question.question}</span>
-                        {question.refFiles.map((id,i)=>typeof(id)==="string"?<img key={i} src={"http://localhost:3001/teacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>:null)}
+                        {question.refFiles.map((id,i)=>typeof(id)==="string"?<img key={i} src={"https://dp-db.herokuapp.com/teacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>:null)}
                         {questionType==='QCM'?(
                             <form  className="displayOptions">
                                 {question.options.map(option=>(
@@ -345,7 +345,7 @@ class Examen extends Component {
             1. The object to be uploaded to the Copies collection is: toBeUploaded
 
         */
-         fetch(`http://localhost:3001/student/compos/examen/new`, {
+         fetch(`https://dp-db.herokuapp.com/student/compos/examen/new`, {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({

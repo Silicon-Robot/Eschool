@@ -46,7 +46,7 @@ class Questionnaire extends Component {
             create this evaluation and fetch evaluation collection back into the redux state.
         */
         console.log(evaluationToCreate)
-         fetch(`http://localhost:3001/teacher/questionnaire/new`, {
+         fetch(`https://dp-db.herokuapp.com/teacher/questionnaire/new`, {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -119,7 +119,7 @@ class Questionnaire extends Component {
     handleDeleteClick=(e)=>{
         let idDeleteObject = e.target.id.split('_')[0]
         console.log(idDeleteObject)
-        fetch(`http://localhost:3001/teacher/questionnaire/${idDeleteObject}/delete`, {
+        fetch(`https://dp-db.herokuapp.com/teacher/questionnaire/${idDeleteObject}/delete`, {
             method: 'delete',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -144,7 +144,7 @@ class Questionnaire extends Component {
         */
         const evaluation = {...evalx};
         delete evaluation.idEvaluation
-         fetch(`http://localhost:3001/teacher/questionnaire/${evalx.idEvaluation}/update`, {
+         fetch(`https://dp-db.herokuapp.com/teacher/questionnaire/${evalx.idEvaluation}/update`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -318,7 +318,7 @@ class Questionnaire extends Component {
         files.forEach(file=>Fd.append('files',file))
         console.log(...Fd)
 
-        let data = await fetch('http://localhost:3001/teacher/questionnaire/upload', {
+        let data = await fetch('https://dp-db.herokuapp.com/teacher/questionnaire/upload', {
                          method: 'post',
                          // headers: {'x-access-token':window.localStorage.getItem("token")},
                          body: Fd
@@ -355,7 +355,7 @@ class Questionnaire extends Component {
                         <input type="file" accept="image/jpeg,image/jpg,image/png,image/pneg" id={index+'_filesInput'} onChange={(e)=>this.fileChanged(e)} multiple/>
                         <br/>
                         {this.state.editableEvaluation.questions.length?
-                            this.state.editableEvaluation.questions[index-1].refFiles.map((id,i)=><img key={i} src={"http://localhost:3001/teacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>)
+                            this.state.editableEvaluation.questions[index-1].refFiles.map((id,i)=><img key={i} src={"https://dp-db.herokuapp.com/teacher/questionnaire/image/"+id} style={{height: "100px",width: "100px"}} alt="uploaded"/>)
                         :null}
                     </div>
                     <textarea className='answer' id={index+'_answer'} onChange={this.handleTextareaChange}placeholder='Entrer la repose a cette question' value={question.answer} />
@@ -393,7 +393,7 @@ class Questionnaire extends Component {
 
     addNewQuestion=()=><i className='fa fa-plus-circle' onClick={this.handleAddNewQuestion} />
     componentDidMount(){
-        fetch('http://localhost:3001/teacher/questionnaire/evaluation-classes-courses', {
+        fetch('https://dp-db.herokuapp.com/teacher/questionnaire/evaluation-classes-courses', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

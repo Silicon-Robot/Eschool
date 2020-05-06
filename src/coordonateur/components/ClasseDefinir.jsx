@@ -39,5 +39,5 @@ export default class ClasseDefinir extends Component {
                 </div>
             </div>
         )
-    }
+}
 }

@@ -24,7 +24,7 @@ class SignInBody extends Component {
     
     handleSubmit=(e)=>{
         e.preventDefault();
-          fetch('https://dp-db.herokuapp.com/signin', {
+          fetch('http://localhost:3001/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -43,7 +43,7 @@ class SignInBody extends Component {
               console.log(user.role,this.props)
               if(user.role==="secretaire"){
               this.props.history.push("/manage-personnels")
-              } else if(user.role==="coordonnateur"){
+              } else if(user.role==="coordonateur"){
                 this.props.history.push("/coordo")
               }else if(user.role==="enseignant"){
                 this.props.history.push("/teacher")

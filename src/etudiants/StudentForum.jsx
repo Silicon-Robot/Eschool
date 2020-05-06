@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
-
+import io from 'socket.io-client'
+import { Link } from 'react-router-dom'
+import Hoc from '../shared/utils/hoc.js'
+import parseJwt from '../shared/utils/parseJwt.js'
 import './StudentForum.css'
 import { connect } from 'react-redux'
 
 class StudentForum extends Component {
     state={
-        idEtudiant:1,
-        idCour:1,
+        idEtudiant:null,
+        idCour:this.props.match.params.idCour,
         message:'',
         refFile:'',
     }
@@ -61,7 +64,7 @@ class StudentForum extends Component {
        let nomSender =''
        let messageClassName = ''
        if(message.isEnseignant) {
-           nomSender = this.props.personnels.find(personnel=>personnel.idPersonnel===this.props.cours.find(cour=>cour.idCour===this.state.idCour).idEnseignant)
+           nomSender = this.props.personnels.find(personnel=>personnel.idPersonnel===this.props.cours.find(cour=>cour.idCour===this.state.idCour).nomEnseignant)
            messageClassName='teacherMessage'
         }else if(message.idEtudiant===this.state.idEtudiant){
             nomSender = {nom:'Moi', prenom:''}
@@ -77,7 +80,7 @@ class StudentForum extends Component {
         //if its an image, then display the image in the img tag
         //else make the ref downloadable on click
         //adjust the return below to either be an image or a link that downloads a ref on Click
-        let refFile = message.refFile!==''?(<img src='' alt='hell' className='messageImage' />):null
+        let refFile = !message.refFile?null:message.refFile.filetype.split('/').includes('image')?(<img src={"http://localhost:3001/forum/file/"+message.refFile.link} alt='refFile' className='messageImage' />): <a href={"http://localhost:3001/forum/file/"+message.refFile.link} download={message.refFile.name}>{message.refFile.name}</a>
 
         return (
             <div key={key} className={messageClassName+ ' message'}>
@@ -115,38 +118,63 @@ class StudentForum extends Component {
         this.setState({message:e.target.value})
     }
 
-    handleSendMessage=()=>{
+    handleSendMessage= async ()=>{
         if(this.state.refFile!=='' || this.state.message!==''){
+            let ref = null;
+            if(this.state.refFile){
+               let data = await fetch('http://localhost:3001/forum/upload', {
+                         method: 'post',
+                         body: this.state.refFile
+                       })
+        data = await data.json()
+        console.log(data)
+        if(data.error) return alert('Could not upload file')
+        if (data.message) ref = data.message
+        }
             let date = new Date()
             date = date.toDateString()
             let dateTime = new Date()+' '
             dateTime = dateTime.split(' G')[0]
-            let newMessage = {date:date, dateTime:dateTime, isEnseignant:true, message:this.state.message, refFile:this.state.refFile, idEtudiant:''}
+
+            let newMessage = {date:date, dateTime:dateTime, isEnseignant:false, message:this.state.message, refFile:ref, idEtudiant:this.state.idEtudiant}
             //In the forum collection, update the forum with id: this.state.idCours
             //add the message: newMessage to the messages array of this forum
             //After adding the message, fetch the data back to the forums in the state.
             //If there was the possibility to fetch only that forum back so as not to use the user's data
-
+            let sendData = { idCour: this.state.idCour, message: newMessage }
+            this.socket.emit("message",sendData)
+            // let updatedForum = this.props.forums.find(forum=>forum.idCour===this.state.idCour)
+            // updatedForum.messages.push(newMessage)
+            // this.props.dispatch({type: "UPDATE_FORUM", payload: updatedForum})
             //in the componentDidMount of this page, make it fetch the forum's page every second... or i don't know if mongo has a realtime db
             //that will do automatic fetches if the db changes..
-
             console.log(newMessage)
             this.setState({message:'', refFile:''})
         }else alert('write a message or send a file')
     }
 
     handleAttachFile=(e)=>{
-        e.preventDefault()
+        if(e.target.files[0].size > 14000000){
+          e.target.value = "";
+        return alert("File is too big!");
+        };
+        let Fd = new FormData();
+        Fd.append('file',e.target.files[0])
+        this.setState({refFile: Fd})
     }
-
+    // scrollToBottom =()=>{
+    // const chat = document.querySelector('.dateMessagesBlock');
+    // chat.scrollTop = chat.scrollHeight;
+    // chat.scrollTop = chat.scrollHeight - chat.clientHeight;;
+    // }
     writeMessage=()=>(
         <div>
             <form className='newMessage'>
-                <button onClick={this.handleAttachFile}><i className='fa fa-paperclip'/></button>
+                <input type='file' onChange={this.handleAttachFile} className='fa fa-paperclip'/>
                 <input type='text' className='newMessageInput' value={this.state.message} placeholder='Type your message' onChange={this.handleNewMessageChange} />
                 <i className='fa fa-send' onClick={this.handleSendMessage}/>
             </form>
-            {/* <Link to='/hell'>Voir emploi de temps</Link> */}
+            <Link to='/student/timetable'>Voir emploi de temps</Link>
         </div>
     )
 
@@ -158,7 +186,7 @@ class StudentForum extends Component {
                     <div className='support' key={support.ref}>
                         <i className={'fa fa-'+(this.fileTypeIcons[support.nameFile.split('.')[support.nameFile.split('.').length-1]] || 'file' )+'-o'} />
                         <span className='nomSupport'>{support.nameFile}</span>
-                        <i className='fa fa-download' />
+                        <a href={`http://localhost:3001/forum/file/${support.link}`} download={support.nameFile}><i className='fa fa-download' /></a>
                     </div>
                 ))}
             </div>
@@ -177,14 +205,104 @@ class StudentForum extends Component {
             </div>
         )
     }
+   componentDidMount(){
+         fetch('http://localhost:3001/teacher/forum', {
+            method: 'get',
+            headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.message){
+                const students = data.message.students.map(student=>{return{
+                    idEtudiant:student._id,
+                    matriculePersonnel: student.matricule,
+                    nom: student.nom,
+                    prenom: student.prenom,
+                    mail: student.email,
+                    tel: student.tel,
+                    role: student.role,
+                    idClasse: student.idClasse
+                }})
+                const cours = data.message.courses.map(cour=>{return{
+                    idCour:cour._id,
+                    classe: cour.classes,
+                    nomCours: cour.nomCour,
+                    codeCours: cour.codeCour,
+                    nomEnseignant: cour.idEnseignant,
+                    refSupports: cour.refSupports
+                }})
+                const users = data.message.users.map(user=>{return{
+                    idPersonnel:user._id,
+                    matricule: user.matricule,
+                    nom: user.nom,
+                    prenom: user.prenom,
+                    mail: user.email,
+                    tel: user.tel,
+                    role: user.role
+                }})
+                const forums = data.message.forums.map(note=> {
+                    return {
+                        idForum:note._id, 
+                        idCour:note.idCour, 
+                        messages:note.messages
+                    }
+                  })
+                 const classes = data.message.classes.map(classe=> {
+                    return {
+                        idClasse:classe._id, 
+                        filiere:{
+                            nomFiliere:classe.nomClasse, 
+                            idFiliere: classe.idFiliere
+                        }, 
+                        niveau:classe.niveau
+                    }
+                  })
+                this.props.dispatch({type: "LOAD_CLASSE", payload: classes})
+                this.props.dispatch({type: "LOAD_FORUM", payload: forums})
+                this.props.dispatch({type: "LOAD_PERSONNEL", payload: users})
+                this.props.dispatch({type: "LOAD_COUR", payload: cours})
+                this.props.dispatch({type: "CREATE_ETUDIANT", payload: students})
+                this.setState({idEtudiant:parseJwt(window.localStorage.getItem('token')).user._id})
+            }
+            else{
+              console.log(data)
+            }
+          })
+          .catch(error=>console.log(error))      
+    this.socket = io("http://localhost:3001");
 
+    this.socket.on('init', (msg) => {
+        // this.scrollToBottom()
+    });
+
+    // Update the chat if a new message is broadcasted.
+    this.socket.on("success",(msg)=>console.log('Send Message'))
+    this.socket.on('updatedForum', (msg) => {
+        let updatedForum = this.props.forums.find(forum=>forum.idCour===msg.idCour)
+            updatedForum.messages.push(msg.message)
+            this.props.dispatch({type: "UPDATE_FORUM", payload: updatedForum})
+             // this.scrollToBottom()
+    });
+    this.socket.on('updatedCour', (msg) => {
+        let updatedCour = this.props.cours.find(cour=>cour.idCour===msg.idCour)
+            updatedCour.refSupports.push(msg.refObj)
+            this.props.dispatch({type: "UPDATE_COUR_FORUM", payload: updatedCour})
+             // this.scrollToBottom()
+    });
+    }
     render() {
         return (
             <div>
+            {(!this.state.idEtudiant)?
+                <div id="loading-on">Loading</div>
+            :
+            <Hoc>
                 {this.displayCoursHeader()}
                 {this.displayForumMessagesPerDatePerTime()}
                 {this.writeMessage()}
                 {this.showSupportCours()}
+            </Hoc>
+            }
             </div>
         )
     }
@@ -195,6 +313,7 @@ const mapStateToProps=(state)=>{
         forums: state.Forum.forums,
         etudiants: state.Etudiant.etudiants,
         cours: state.Cour.cours,
+        classes: state.Classe.classes,
         personnels: state.Personnel.personnels
     }
 }

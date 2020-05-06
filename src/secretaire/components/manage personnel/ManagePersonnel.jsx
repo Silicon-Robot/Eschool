@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect }  from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import './ManagePersonnel.css';
 
@@ -26,7 +27,7 @@ class ManagePersonnel extends Component {
             2. fetch the personnel collection from the database and load the personnel part of redux
         */
         let Perso = this.props.personnels.find(personnel=>personnel.matricule===personnelMatricule)
-        fetch(`https://dp-db.herokuapp.com/manage-personnel/${Perso.idPersonnel}/delete`, {
+        fetch(`http://localhost:3001/manage-personnel/${Perso.idPersonnel}/delete`, {
             method: 'delete',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })
@@ -84,7 +85,7 @@ class ManagePersonnel extends Component {
                     Both should be created in a transaction (the update and the creation of the new coordo)
                     After having updated these field, fetch the personnel data back to the redux state so the interface can refresh
                 */
-                 fetch(`https://dp-db.herokuapp.com/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
+                 fetch(`http://localhost:3001/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -118,7 +119,7 @@ class ManagePersonnel extends Component {
                     After having updated these field, fetch the personnel data back to the redux state so the interface can refresh
                 */
 
-                    fetch(`https://dp-db.herokuapp.com/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
+                    fetch(`http://localhost:3001/manage-personnel/${this.state.editableObject.idPersonnel}/update`, {
                          method: 'put',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -245,7 +246,7 @@ class ManagePersonnel extends Component {
               
             let coordoClasses = this.props.classes.filter(classe=>classe.filiere.nomFiliere===this.state.newPersonnelCoordoClass)
             let coordoUploadObject={matriculePersonnel:this.state.newPersonnel.matricule, classes:coordoClasses}
-             fetch('https://dp-db.herokuapp.com/manage-personnel/new', {
+             fetch('http://localhost:3001/manage-personnel/new', {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -290,7 +291,7 @@ class ManagePersonnel extends Component {
             The object to be created in the personnel collection is: this.state.newPersonnel
             */
 
-            fetch('https://dp-db.herokuapp.com/manage-personnel/new', {
+            fetch('http://localhost:3001/manage-personnel/new', {
                          method: 'post',
                          headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")},
                          body: JSON.stringify({
@@ -382,6 +383,8 @@ class ManagePersonnel extends Component {
 
     personnelListHeader=()=>(
         <div className='displayPersonnelListHeader'>
+        <Link to="/setting">setting</Link>
+        <Link to="/manage-personnel">ManagePersonnel</Link>
             <span className='displayPersonnelListHeaderElement'>No</span>
             <span className='displayPersonnelListHeaderElement'>Matricule</span>
             <span className='displayPersonnelListHeaderElement'>Nom</span>
@@ -395,7 +398,7 @@ class ManagePersonnel extends Component {
     
     componentDidMount(){
         console.log(this.props)
-       fetch('https://dp-db.herokuapp.com/manage-personnel/users-classes-faculties', {
+       fetch('http://localhost:3001/manage-personnel/users-classes-faculties', {
             method: 'get',
             headers: {'Content-Type': 'application/json','x-access-token':window.localStorage.getItem("token")}
           })

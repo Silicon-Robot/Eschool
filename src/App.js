@@ -13,10 +13,12 @@ import TeacherTimetable from './enseignant/TeacherTimetable';
 import TeacherNotes from './enseignant/TeacherNotes';
 import Questionnaire from './enseignant/Questionnaire';
 import CorrigerEvaluation from './enseignant/CorrigerEvaluation';
+import TeacherForum from './enseignant/TeacherForum';
 import StudentTimetable from './etudiants/StudentTimetable';
 import Examen from './etudiants/Examen';
 import Devoir from './etudiants/Devoir';
 import StudentNotes from './etudiants/StudentNotes';
+import StudentForum from './etudiants/StudentForum';
 // import Footer from './shared/UIElements/Footer'
 // import NewMatiere from './shared/components/NewMatiere';
 // import ClasseCoordo from './coordonateur/components/ClasseCoordo';
@@ -34,7 +36,7 @@ class App extends React.Component {
     // componentDidMount(){
     //     let token = window.localStorage.getItem('token');
     //     if(token && !this.props.user._id){
-    //         fetch('https://dp-db.herokuapp.com/signin-token', {
+    //         fetch('http://localhost:3001/signin-token', {
     //             method: 'post',
     //             headers: {'Content-Type': 'application/json'},
     //             body: JSON.stringify({
@@ -71,6 +73,7 @@ class App extends React.Component {
                     <Route exact path = '/teacher/correct' > <CorrigerEvaluation/> </Route>
                     <Route exact path = '/teacher/notes' > <TeacherNotes/> </Route>
                     <Route exact path = '/teacher/courses' > <TeacherCourses/> </Route>
+                    <Route exact path = '/teacher/forum/:idCour' component={TeacherForum} /> 
                     <Route exact path = '/manage-personnels' > <ManagePersonnel/> </Route>
                     <Route exact path = '/settings' > <Settings/> </Route>
                     <Route exact path = '/resetpwd' > <ForgotPassword/> </Route> 
@@ -81,7 +84,7 @@ class App extends React.Component {
                         switch(this.props.user.role) {
                             case "secretaire":
                                 return <Redirect to='/manage-personnels'/>;
-                            case "coordonnateur":
+                            case "coordonateur":
                                 return <Redirect to='/coordo'/>;
                             case "enseignant":
                                 return <Redirect to='/teacher'/>;
@@ -95,6 +98,7 @@ class App extends React.Component {
                     <Route exact path = '/student/examen' ><Examen/></Route> 
                     <Route exact path = '/student/devoir' ><Devoir/></Route> 
                     <Route exact path = '/student/note' ><StudentNotes/></Route> 
+                    <Route exact path = '/student/forum/:idCour' component={StudentForum}/> 
                     <Redirect to = '/' />
                 </Switch> 
             </Router >

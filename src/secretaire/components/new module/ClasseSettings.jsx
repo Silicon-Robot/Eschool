@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect }  from 'react-redux'
+import { Link } from 'react-router-dom';
 
 import './ClasseSettigns.css'
 
 
 class ClasseSettings extends Component {
-    state={
-        //working data
+   state ={
+    
         filiere:'',
         classe:'',
         nomNewMatiere:'',
@@ -484,6 +485,8 @@ class ClasseSettings extends Component {
     render() {
         return (
             <div>
+              <Link to="/setting">setting</Link>
+             <Link to="/manage-personnel">ManagePersonnel</Link>
                 <span className="settingsBlockHeader">ADMINISTRATION DES CLASSES</span>
                 <div className="chooseSettingsClass">
                     <select className='settingsClass' onChange={(e)=>this.setState({filiere:e.target.value})} id='filiere'>

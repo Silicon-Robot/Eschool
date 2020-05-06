@@ -9,7 +9,9 @@ const initState = {
 const courReducer = (state = initState, action)=>{
     switch(action.type){
         case 'LOAD_COUR':
-            return{...state, cours:[...state.cours, ...action.payload]}       
+            return{...state, cours:[...state.cours, ...action.payload]}   
+        case 'UPDATE_COUR_FORUM':
+            return{...state, cours:state.cours.map(cour=>cour.idCour===action.payload.idCour?action.payload:cour)}    
         case 'UPDATE_COUR':
         	let index;
         	for (var i = 0; i < action.payload.length; i++) {

@@ -13,8 +13,12 @@ const initState = {
 
 const forumReducer = (state = initState, action)=>{
     switch(action.type){
-        case 'CREATE_BATIMENT':
-            return{...state, etudiants:[...state.forums, ...action.payload]}
+        case 'CREATE_FORUM':
+            return{...state, forums:[...state.forums, ...action.payload]}
+        case 'LOAD_FORUM':
+            return{...state, forums:[...action.payload]}
+        case 'UPDATE_FORUM':
+            return{...state, forums:state.forums.map(forum=>forum.idForum===action.payload.idForum?action.payload:forum)}
         default:
             return state
     }

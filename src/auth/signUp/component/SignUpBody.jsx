@@ -41,7 +41,7 @@ class SignUpBody extends Component {
 
     handleSubmit=(e)=>{
         e.preventDefault()
-        fetch('https://dp-db.herokuapp.com/signup', {
+        fetch('http://localhost:3001/signup', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -65,7 +65,7 @@ class SignUpBody extends Component {
               this.props.setUser(user)
               if(user.role==="secretaire"){
               this.props.history.push("/manage-personnels")
-              } else if(user.role==="coordonnateur"){
+              } else if(user.role==="coordonateur"){
                 this.props.history.push("/coordo")
               }else if(user.role==="enseignant"){
                 this.props.history.push("/teacher")
